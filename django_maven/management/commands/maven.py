@@ -68,6 +68,8 @@ class Command(BaseCommand):
                 else:
                     raise
                 sentry = Client(dsn)
+                if not sentry.is_enabled():
+                    raise
                 sentry.get_ident(sentry.captureException())
 
             self._write_error_in_stderr(e)
