@@ -51,6 +51,7 @@ class Command(BaseCommand):
         subcommand_class = self._get_subcommand_class(argv[2])
         parser = self.create_parser(argv[0], argv[2], subcommand_class)
         if hasattr(self, 'use_argparse') and self.use_argparse:
+            subcommand_class.add_arguments(parser)
             options = parser.parse_args(argv[3:])
             cmd_options = vars(options)
             args = cmd_options.pop('args', ())
