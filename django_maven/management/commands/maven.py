@@ -45,7 +45,8 @@ class Command(BaseCommand):
 
     def run_from_argv(self, argv):
         if len(argv) <= 2 or argv[2] in ['-h', '--help']:
-            print self.usage(argv[1])
+            stdout = OutputWrapper(sys.stdout)
+            stdout.write(self.usage(argv[1]))
             sys.exit(1)
 
         subcommand_class = self._get_subcommand_class(argv[2])
