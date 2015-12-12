@@ -1,5 +1,7 @@
 from django import VERSION
+from django.core.management.base import BaseCommand
 
+__all__ = ['OutputWrapper', 'MavenBaseCommand']
 
 if VERSION > (1, 5,):
     from django.core.management.base import OutputWrapper
@@ -10,6 +12,7 @@ else:
         """
         Wrapper around stdout/stderr from django 1.5
         """
+
         def __init__(self, out, style_func=None, ending='\n'):
             self._out = out
             self.style_func = None
@@ -24,6 +27,11 @@ else:
             ending = ending is None and self.ending or ending
             if ending and not msg.endswith(ending):
                 msg += ending
-            style_func = [f for f in (style_func, self.style_func, lambda x:x)
+            style_func = [f for f in (style_func, self.style_func, lambda x: x)
                           if f is not None][0]
             self._out.write(force_unicode(style_func(msg)))
+
+if hasattr(BaseCommand, 'use_argparse'):
+    from django_maven.management.argparse_command import MavenBaseCommand
+else:
+    from django_maven.management.optparse_command import MavenBaseCommand
