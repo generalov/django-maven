@@ -9,7 +9,7 @@ def read(filename):
 
 setup(
     name='django-maven',
-    version='0.2',
+    version='0.3',
     license='ISC',
     description='Capture exceptions in django management commands '
                 'into Sentry by Raven',
@@ -19,11 +19,10 @@ setup(
     url='https://github.com/saippuakauppias/django-maven',
     author='Denis Veselov',
     author_email='progr.mail@gmail.com',
-    include_package_data=True,
-    packages=find_packages(),
-    install_requires=[
-        'django'
-    ],
+    include_package_data=False,
+    packages=find_packages(
+        exclude=['*.tests', '*.tests.*', 'tests.*', 'tests']),
+    install_requires=[],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Framework :: Django',
@@ -37,4 +36,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP'
     ],
+    zip_safe=True,
 )
