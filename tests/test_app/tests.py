@@ -11,14 +11,14 @@ class MavenCommandTest(TestCase):
 
     def test_subcommand(self):
         result = get_output(['django-admin.py',
-                             'testcmd', '--settings=test_project.settings'])
+                             'maven_check', '--ok', '--settings=test_project.settings'])
         self.assertEqual('OK', result.output.strip())
         self.assertEqual(0, result.returncode)
 
     def test_maven_subcommand(self):
         result = get_output(['django-admin.py',
                              'maven', '--settings=test_project.settings',
-                             'testcmd'])
+                             'maven_check', '--ok'])
         self.assertEqual('OK', result.output.strip())
         self.assertEqual(0, result.returncode)
 
@@ -26,11 +26,17 @@ class MavenCommandTest(TestCase):
         result = get_output(['django-admin.py',
                              'maven', '--settings=test_project.settings',
                              '--traceback', '--verbosity=2',
-                             'testcmd', '--fail'])
-        self.assertIn('Beautiful is better than IgnoramusException. '
-                      'Errors should never pass silently.',
-                      result.output.strip())
+                             'maven_check'])
+        self.assertIn('MavenCheckException', result.output.strip())
         self.assertIn('Traceback', result.output.strip())
+        self.assertNotEqual(0, result.returncode)
+
+    def test_maven_should_capture_import_error(self):
+        result = get_output(['django-admin.py',
+                             'maven', '--settings=test_project.settings',
+                             '--traceback', '--verbosity=2',
+                             'maven_test_import_error'])
+        self.assertIn('Maven: got ImportError', result.output.strip())
         self.assertNotEqual(0, result.returncode)
 
 

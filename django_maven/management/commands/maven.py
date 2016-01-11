@@ -25,14 +25,14 @@ class Command(MavenBaseCommand):
             self.print_help(self._argv[0], self._argv[1])
             return
 
-        subcommand = self._get_subcommand_class(args[0])
-        subcommand_argv = [self._argv[0]] + list(args)
-
-        # this is a lightweight version of the BaseCommand.run_from_argv
-        # it should be compatible with Django-1.5..1.9
-        subcommand_args, subcommand_options = self._handle_argv(
-            subcommand, subcommand_argv)
         try:
+            subcommand = self._get_subcommand_class(args[0])
+            subcommand_argv = [self._argv[0]] + list(args)
+
+            # this is a lightweight version of the BaseCommand.run_from_argv
+            # it should be compatible with Django-1.5..1.9
+            subcommand_args, subcommand_options = self._handle_argv(
+            subcommand, subcommand_argv)
             subcommand.execute(*subcommand_args, **subcommand_options)
         except Exception as e:
             if not isinstance(e, CommandError):
@@ -40,9 +40,7 @@ class Command(MavenBaseCommand):
                     # self.stderr is not guaranteed to be set here
                     stderr = getattr(self, 'stderr', OutputWrapper(
                         sys.stderr, self.style.ERROR))
-                    stderr.write('Beautiful is better than %s. '
-                                 'Errors should never pass silently.' %
-                                 (e.__class__.__name__))
+                    stderr.write('Maven: got %s.' % (e.__class__.__name__))
 
                 sentry = self._get_sentry()
                 if sentry:
